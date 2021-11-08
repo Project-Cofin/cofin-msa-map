@@ -1,11 +1,14 @@
 import React from "react";
-import { LocalMap } from "..";
+import { Geolocation, LocalMap, LocalMapInfo, Options } from "..";
 
 const LocalMapPage = () => {
 
-  return (
+  return (<>
+    <Options/>
     <LocalMap/>
-  );
+    <LocalMapInfo/>
+    <Geolocation/>
+    </>);
 };
 
 export default LocalMapPage;

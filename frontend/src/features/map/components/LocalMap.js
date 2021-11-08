@@ -4,9 +4,12 @@ const { kakao } = window;
 
 function LocalMap() {
   useEffect(() => {
+    var geoInfo = window.localStorage.getItem('sessionGeo').split(',')
+    alert(geoInfo)
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
     mapOption = { 
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        // center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        center: new kakao.maps.LatLng(geoInfo[0], geoInfo[1]), // 지도의 중심좌표
         level: 3 // 지도의 확대 레벨
     };
 
@@ -14,6 +17,10 @@ function LocalMap() {
     
     // 마커를 표시할 위치와 내용을 가지고 있는 객체 배열입니다 
     var positions = [
+        {
+            content: '<div>카카오</div>', 
+            latlng: new kakao.maps.LatLng(geoInfo[0], geoInfo[1])
+        },
         {
             content: '<div>카카오</div>', 
             latlng: new kakao.maps.LatLng(33.450705, 126.570677)
@@ -70,8 +77,7 @@ function LocalMap() {
     <div
       className="map"
       id="map"
-      style={{ width: "1000px", height: "500px" }}
-    //   ref={mapContainer}
+      style={{ width: "1000px", height: "500px", float: "left"}}
     ></div>
   );
 }
