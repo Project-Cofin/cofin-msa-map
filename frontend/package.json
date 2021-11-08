@@ -25,7 +25,8 @@
     "react-scripts": "4.0.3",
     "react-scroll": "^1.8.4",
     "react-toast-notifications": "^2.5.1",
-    "redux-multilanguage": "^0.1.2"
+    "redux-multilanguage": "^0.1.2",
+    "styled-components": "^5.3.3"
   },
   "scripts": {
     "start": "react-scripts start",
