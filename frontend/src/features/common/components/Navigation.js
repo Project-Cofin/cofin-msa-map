@@ -7,6 +7,8 @@ export default function Navigation (){
             <ul>
                 <li><Link to='/home'>메인 화면</Link></li>
                 <li><Link to='/organ/chat'>챗봇 채팅창</Link></li>
+                <li><Link to='/organ/chat2'>채팅창 2</Link></li>
+                <li><Link to='/organ/chat3'>채팅창 3</Link></li>
                 <li><Link to='/organ/local'>국내 지도</Link></li>
                 <li><Link to='/organ/world'>세계 지도</Link></li>
             </ul>
