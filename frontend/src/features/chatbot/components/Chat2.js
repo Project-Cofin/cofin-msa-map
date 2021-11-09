@@ -1,49 +1,95 @@
 import React from "react";
-import Chatbot from "react-chatbot-kit";
-// Config starter code
-import { createChatBotMessage } from "react-chatbot-kit";
-
-class MessageParser {
-    constructor(actionProvider, state) {
-      this.actionProvider = actionProvider;
-      this.state = state;
-    }
-  
-    parse(message) {
-      console.log(message)
-    }
-  }
-  
-  // ActionProvider starter code
-  class ActionProvider {
-     constructor(
-      createChatBotMessage,
-      setStateFunc,
-      createClientMessage,
-      stateRef,
-      createCustomMessage,
-      ...rest
-    ) {
-      this.createChatBotMessage = createChatBotMessage;
-      this.setState = setStateFunc;
-      this.createClientMessage = createClientMessage;
-      this.stateRef = stateRef;
-      this.createCustomMessage = createCustomMessage;
-    }
-  }
-  
+import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+import {
+  MainContainer,
+  ChatContainer,
+  MessageList,
+  Message,
+  InfoButton, 
+  MessageInput,
+  Avatar,
+  ConversationHeader,
+  VoiceCallButton,
+  VideoCallButton,
+} from "@chatscope/chat-ui-kit-react";
+import { useState, useRef } from "react";
 
 export default function Chat2() {
-    const config = {
-        initialMessages: [createChatBotMessage(`Hello world`)]
-      }
+  const inputRef = useRef();
+  const [msgInputValue, setMsgInputValue] = useState("");
+  const [messages, setMessages] = useState([]);
+
+  const handleSend = (message) => {
+    setMessages([
+      ...messages,
+      {
+        message,
+        direction: "outgoing",
+      },
+    ]);
+    setMsgInputValue("");
+    inputRef.current.focus();
+  };
   return (
-    <div className="App">
-      <Chatbot
-        config={config}
-        messageParser={MessageParser}
-        actionProvider={ActionProvider}
-      />
+    <div
+      style={{
+        height: "800px",
+        width: "500px",
+        position: "relative",
+      }}
+    >
+      <MainContainer responsive>
+        <ChatContainer>
+          <ConversationHeader>
+            <ConversationHeader.Back />
+            <Avatar src={require("./data/icon.png").default} name="Cofin" />
+            <ConversationHeader.Content userName="Cofin" />
+            <ConversationHeader.Actions>
+              <VoiceCallButton />
+              <VideoCallButton />
+              <InfoButton />
+            </ConversationHeader.Actions>
+          </ConversationHeader>
+          <MessageList>
+            <Message
+              model={{
+                message: "Hello my friend",
+                sentTime: "15 mins ago",
+                sender: "Cofin",
+                direction: "incoming",
+                position: "single",
+              }}
+            >
+              <Avatar src={require("./data/icon.png").default} name={"Cofin"} />
+            </Message>
+            {messages.map((m, i) => (
+              <Message key={i} model={m} />
+            ))}
+          </MessageList>
+          <div
+            as={MessageInput}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              borderTop: "1px dashed #d1dbe4",
+            }}
+          >
+            <MessageInput
+              ref={inputRef}
+              onChange={(msg) => setMsgInputValue(msg)}
+              value={msgInputValue}
+              // sendButton={false}
+              attachButton={false}
+              onSend={handleSend}
+              style={{
+                flexGrow: 1,
+                borderTop: 0,
+                flexShrink: "initial",
+              }}
+            />
+          </div>
+        </ChatContainer>
+      </MainContainer>
     </div>
   );
 }
