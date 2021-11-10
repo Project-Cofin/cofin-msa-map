@@ -1,6 +1,7 @@
 import ChatBot from "react-simple-chatbot";
 import React, { Component } from "react";
 import { ThemeProvider } from "styled-components";
+import { render } from "@testing-library/react";
 
 const Chat = () => {
   return (
@@ -20,38 +21,38 @@ const Chat = () => {
       <ChatBot
         steps={[
           {
-            id: "q-name",
-            message: "What is your name?",
-            trigger: "name",
+            id: 'q-name',
+            message: 'What is your name??',
+            trigger: 'name',
           },
           {
-            id: "name",
+            id: 'name',
             user: true,
-            trigger: "q-age",
+            trigger: 'a-name'
           },
           {
-            id: "q-age",
-            message: "How old are you??",
-            trigger: "age",
+            id: 'a-name',
+            message: 'Hi {previousValue}, nice to meet you!',
+            trigger: 'q-hobby'
           },
           {
-            id: "age",
-            user: true,
-            trigger: "q-job",
+              id: 'q-hobby',
+              message: 'What is your hobby?',
+              trigger: 'hobby'
           },
           {
-            id: "q-job",
-            message: "Finally. what is you job?",
-            trigger: "job",
-          },
+              id: 'hobby',
+              user: true,
+              trigger: 'a-hobby'
+            },
           {
-            id: "job",
-            user: true,
-            trigger: "q-submit",
+            id: 'a-hobby',
+            message: "{previousValue}? That's cool!",
+            trigger: 'q-submit'
           },
           {
             id: "q-submit",
-            message: "Do you wish to submit?",
+            message: "Can I remember you?",
             trigger: "submit",
           },
           {
@@ -70,8 +71,25 @@ const Chat = () => {
             id: "end-message",
             component: <Post />,
             asMessage: true,
-            end: true,
+            trigger: 'q-re-start'
           },
+          {
+            id: 'q-re-start',
+            message: "Do you want to do it again?",
+            trigger: 're-start'
+          },
+          {
+            id: 're-start',
+            options: [
+              { value: 'y', label: "Yes", trigger: "q-name" },
+              { value: 'n', label: "No", trigger: "stop" },
+            ],
+          },
+          {
+            id: 'stop',
+            message: 'Ok! bye~',
+            end: true
+          }
         ]}
         botAvatar={require("./data/icon.png").default}
         userAvatar={require("./data/user.png").default}
@@ -82,23 +100,42 @@ const Chat = () => {
 
 export default Chat;
 
+// export function Post(props) {
+//     const { steps } = props;
+//     const { submit, name, hobby } = steps;
+//     const state = { submit, name, hobby };
+//     // const keys = Object.getOwnPropertyNames(state)
+//     // console.log(keys)
+//     const userObject = {
+//       submit: state.submit.value,
+//       name: state.name.value,
+//       hoby: state.hobby.value,
+//     };
+//     console.log(`data: ${JSON.stringify(userObject)}`)
+//     return (
+//       <>
+//         <div>Thank you! I'll remember you.</div>
+//       </>
+//     );
+// }
+
+
 export class Post extends Component {
   constructor(props) {
     super(props);
     const { steps } = this.props;
-    const { submit, name, age, job } = steps;
+    const { submit, name, hobby } = steps;
 
-    this.state = { submit, name, age, job };
+    this.state = { submit, name, hobby };
   }
 
   componentDidMount() {
     const userObject = {
       submit: this.state.submit.value,
       name: this.state.name.value,
-      age: this.state.age.value,
-      job: this.state.job.value,
+      hoby: this.state.hobby.value,
     };
-    alert(`data: ${JSON.stringify(userObject)}`);
+    console.log(`data: ${JSON.stringify(userObject)}`);
     // axios.post(`/api`, userObject)
     // .then(res => {
     //     console.log(res.status)
@@ -110,7 +147,7 @@ export class Post extends Component {
   render() {
     return (
       <>
-        <div>Thank you! Your data was submitted successfully!</div>
+        <div>Thank you! I'll remember you.</div>
       </>
     );
   }

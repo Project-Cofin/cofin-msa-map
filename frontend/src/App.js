@@ -1,8 +1,8 @@
 import React from 'react';
 import { Home, Navigation } from 'features/common';
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
+import { Route, Redirect, Switch } from 'react-router-dom'
 // import { Route, Redirect, Switch } from 'react-router';
-import { Chat, Chat2, Chat3, Chat4 } from 'features/chatbot';
+import { Chat, Chat2 } from 'features/chatbot';
 import { LocalMapPage, WorldMapPage } from 'features/map';
 
 function App() {
