@@ -18,7 +18,7 @@ function LocalMap() {
     // 마커를 표시할 위치와 내용을 가지고 있는 객체 배열입니다 
     var positions = [
         {
-            content: '<div>카카오</div>', 
+            content: '<div style="padding:5px; border-radius: 15px;">내 위치</div>', 
             latlng: new kakao.maps.LatLng(geoInfo[0], geoInfo[1])
         },
         {
@@ -56,6 +56,7 @@ function LocalMap() {
         // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
         kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
         kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+        kakao.maps.event.addListener(marker, 'click', function(){alert('hi!')})
     }
 
     // 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
