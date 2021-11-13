@@ -34,8 +34,6 @@ INSTALLED_APPS = [
     'api',
     'rest_framework',
     'knox',
-    'user',
-    'item',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
