@@ -37,6 +37,26 @@ class CrawlingTest(object):
         table_df.loc[(table_df.Country == 'Venezuela'), 'Country'] = 'Venezuela (Bolivarian Republic of)'
         table_df.loc[(table_df.Country == 'S. Korea'), 'Country'] = 'Korea, Republic of'
         table_df.loc[(table_df.Country == 'Moldova'), 'Country'] = 'Moldova, Republic of'
+        table_df.loc[(table_df.Country == 'Ivory Coast'), 'Country'] = "Côte d'Ivoire"
+        table_df.loc[(table_df.Country == 'DRC'), 'Country'] = "Congo, Democratic Republic of the"
+        table_df.loc[(table_df.Country == 'Laos'), 'Country'] = "Lao People's Democratic Republic"
+        table_df.loc[(table_df.Country == 'Syria'), 'Country'] = "Syrian Arab Republic"
+        table_df.loc[(table_df.Country == 'Tanzania'), 'Country'] = "Tanzania, United Republic of"
+        table_df.loc[(table_df.Country == 'Taiwan'), 'Country'] = "Taiwan, Province of China"
+        table_df.loc[(table_df.Country == 'Channel Islands'), 'Country'] = "Jersey"
+        table_df.loc[(table_df.Country == 'Brunei'), 'Country'] = "Brunei Darussalam"
+        table_df.loc[(table_df.Country == 'CAR'), 'Country'] = "Central African Republic"
+        table_df.loc[(table_df.Country == 'St. Vincent Grenadines'), 'Country'] = "Saint Vincent and the Grenadines"
+        table_df.loc[(table_df.Country == 'Sint Maarten'), 'Country'] = "Sint Maarten (Dutch part)"
+        table_df.loc[(table_df.Country == 'Saint Martin'), 'Country'] = "Saint Martin (French part)"
+        table_df.loc[(table_df.Country == 'Turks and Caicos'), 'Country'] = "Turks and Caicos Islands"
+        table_df.loc[(table_df.Country == 'Faeroe Islands'), 'Country'] = "Faroe Islands"
+        table_df.loc[(table_df.Country == 'British Virgin Islands'), 'Country'] = "Virgin Islands (British)"
+        table_df.loc[(table_df.Country == 'St. Barth'), 'Country'] = "Saint Barthélemy"
+        table_df.loc[(table_df.Country == 'Falkland Islands'), 'Country'] = "Falkland Islands (Malvinas)"
+        table_df.loc[(table_df.Country == 'Saint Pierre Miquelon'), 'Country'] = "Saint Pierre and Miquelon"
+        table_df.loc[(table_df.Country == 'Saint Helena'), 'Country'] = "Saint Helena, Ascension and Tristan da Cunha"
+        table_df.loc[(table_df.Country == 'Micronesia'), 'Country'] = "Micronesia (Federated States of)"
         table_df.to_csv(vo.context+'new_data/manufactured_corona_cases.csv', index=False)
         # print(table_df)
         driver.close()

@@ -99,7 +99,7 @@ Haiti,HT,HTI,332,ISO 3166-2:HT,Americas,Latin America and the Caribbean,Caribbea
 Heard Island and McDonald Islands,HM,HMD,334,ISO 3166-2:HM,Oceania,Australia and New Zealand,"",009,053,""
 Holy See,VA,VAT,336,ISO 3166-2:VA,Europe,Southern Europe,"",150,039,""
 Honduras,HN,HND,340,ISO 3166-2:HN,Americas,Latin America and the Caribbean,Central America,019,419,013
-Hong Kong,HK,HKG,344,ISO 3166-2:HK,Asia,Eastern Asia,"",142,030,""
+Hong Kong,HK,c,344,ISO 3166-2:HK,Asia,Eastern Asia,"",142,030,""
 Hungary,HU,HUN,348,ISO 3166-2:HU,Europe,Eastern Europe,"",150,151,""
 Iceland,IS,ISL,352,ISO 3166-2:IS,Europe,Northern Europe,"",150,154,""
 India,IN,IND,356,ISO 3166-2:IN,Asia,Southern Asia,"",142,034,""
