@@ -22,5 +22,5 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', HelloAPI),
     path('api/hello', HelloAPI),
-    # path('users/', include('user.urls')),
+    path('api/map/', include('map.urls'))
 ]

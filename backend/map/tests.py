@@ -30,5 +30,6 @@ def getLatLng(addr):
     except TypeError:  # match값이 2개이상일때
         return 0
 
+
 if __name__ == '__main__':
     getLatLng('서울 강남구 일원로81 삼성서울병원')
