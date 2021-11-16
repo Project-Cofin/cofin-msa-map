@@ -1,16 +1,17 @@
-from common.models import ValueObject
+from common.models import ValueObject, Reader
 import pandas as pd
 from selenium import webdriver
 from bs4 import BeautifulSoup
+import csv
 
 
 class CrawlingTest(object):
     def __init__(self):
         pass
 
-    def execute(self):
+    def execute_crawling(self):
         vo = ValueObject()
-        vo.context = './data/'
+        vo.context = 'data/'
         vo.url = 'https://www.worldometers.info/coronavirus'
         driver = webdriver.Chrome(f'{vo.context}chromedriver')
         driver.get(vo.url)
@@ -23,45 +24,43 @@ class CrawlingTest(object):
         # print(table_df)
         table_df = table_df.loc[:, ['Country,Other', 'TotalCases', 'TotalDeaths', 'TotalRecovered', 'Population']]
         table_df = table_df.iloc[1:-1]
-        table_df.rename(columns={'Country,Other': 'Country'}, inplace=True)
-        table_df.fillna(0)
-        table_df.loc[(table_df.Country == 'USA'), 'Country'] = 'United States of America'
-        table_df.loc[(table_df.Country == 'UK'), 'Country'] = 'United Kingdom of Great Britain and Northern Ireland'
-        table_df.loc[(table_df.Country == 'Russia'), 'Country'] = 'Russian Federation'
-        table_df.loc[(table_df.Country == 'Iran'), 'Country'] = 'Iran (Islamic Republic of)'
-        table_df.loc[(table_df.Country == 'Vietnam'), 'Country'] = 'Viet Nam'
-        table_df.loc[(table_df.Country == 'Georgia'), 'Country'] = 'South Georgia and the South Sandwich Islands'
-        table_df.loc[(table_df.Country == 'UAE'), 'Country'] = 'United Arab Emirates'
-        table_df.loc[(table_df.Country == 'Bolivia'), 'Country'] = 'Bolivia (Plurinational State of)'
-        table_df.loc[(table_df.Country == 'Palestine'), 'Country'] = 'Palestine, State of'
-        table_df.loc[(table_df.Country == 'Venezuela'), 'Country'] = 'Venezuela (Bolivarian Republic of)'
-        table_df.loc[(table_df.Country == 'S. Korea'), 'Country'] = 'Korea, Republic of'
-        table_df.loc[(table_df.Country == 'Moldova'), 'Country'] = 'Moldova, Republic of'
-        table_df.loc[(table_df.Country == 'Ivory Coast'), 'Country'] = "Côte d'Ivoire"
-        table_df.loc[(table_df.Country == 'DRC'), 'Country'] = "Congo, Democratic Republic of the"
-        table_df.loc[(table_df.Country == 'Laos'), 'Country'] = "Lao People's Democratic Republic"
-        table_df.loc[(table_df.Country == 'Syria'), 'Country'] = "Syrian Arab Republic"
-        table_df.loc[(table_df.Country == 'Tanzania'), 'Country'] = "Tanzania, United Republic of"
-        table_df.loc[(table_df.Country == 'Taiwan'), 'Country'] = "Taiwan, Province of China"
-        table_df.loc[(table_df.Country == 'Channel Islands'), 'Country'] = "Jersey"
-        table_df.loc[(table_df.Country == 'Brunei'), 'Country'] = "Brunei Darussalam"
-        table_df.loc[(table_df.Country == 'CAR'), 'Country'] = "Central African Republic"
-        table_df.loc[(table_df.Country == 'St. Vincent Grenadines'), 'Country'] = "Saint Vincent and the Grenadines"
-        table_df.loc[(table_df.Country == 'Sint Maarten'), 'Country'] = "Sint Maarten (Dutch part)"
-        table_df.loc[(table_df.Country == 'Saint Martin'), 'Country'] = "Saint Martin (French part)"
-        table_df.loc[(table_df.Country == 'Turks and Caicos'), 'Country'] = "Turks and Caicos Islands"
-        table_df.loc[(table_df.Country == 'Faeroe Islands'), 'Country'] = "Faroe Islands"
-        table_df.loc[(table_df.Country == 'British Virgin Islands'), 'Country'] = "Virgin Islands (British)"
-        table_df.loc[(table_df.Country == 'St. Barth'), 'Country'] = "Saint Barthélemy"
-        table_df.loc[(table_df.Country == 'Falkland Islands'), 'Country'] = "Falkland Islands (Malvinas)"
-        table_df.loc[(table_df.Country == 'Saint Pierre Miquelon'), 'Country'] = "Saint Pierre and Miquelon"
-        table_df.loc[(table_df.Country == 'Saint Helena'), 'Country'] = "Saint Helena, Ascension and Tristan da Cunha"
-        table_df.loc[(table_df.Country == 'Micronesia'), 'Country'] = "Micronesia (Federated States of)"
+        table_df.rename(columns={'Country,Other': 'name', 'TotalCases': 'cases', 'Population': 'population'}, inplace=True)
+        table_df.fillna(0, inplace=True)
         table_df.to_csv(vo.context+'new_data/manufactured_corona_cases.csv', index=False)
         # print(table_df)
         driver.close()
 
+    def world_code_labeling(self):
+        vo = ValueObject()
+        reader = Reader()
+        vo.context = 'data/new_data/'
+        vo.fname = 'new_iso_countries'
+        csvfile = reader.new_file(vo)
+        countries_code_df = reader.csv(csvfile)
+        vo.fname = 'manufactured_corona_cases'
+        csvfile = reader.new_file(vo)
+        cases_df = reader.csv(csvfile)
+        countries_code_df = countries_code_df.loc[:, ['name', 'alpha-2']]
+
+
+        # cases_df = cases_df[cases_df['name'] == 'India'].name
+        # for val in cases_df['name']:
+        #     if countries_code_df[countries_code_df['name'] == val].values:
+        #         cases_df['short_name'] = countries_code_df[countries_code_df['name'] == 'India'].values[0][1]
+            # print(countries_code_df[countries_code_df['name'] == val])
+            # print(f'val: {val["name"]}')
+            # print(f'val: {val["alpha-2"]}')
+            # if val['name'] == cases_df[cases_df['Country']]
+            # print(str(val['name']).equals(str(cases_df['Country'])))
+            # print(str(val['name']))
+        cases_df = pd.merge(cases_df, countries_code_df, left_on='name', right_on='name')
+        cases_df.dropna(inplace=True)
+        cases_df.rename(columns={'alpha-2': 'short_name'}, inplace=True)
+        cases_df['population'] = cases_df['population'].astype(int)
+        cases_df.to_csv(vo.context+'integrated_cases.csv', index=False)
+        # print(cases_df.head(3))
 
 if __name__ == '__main__':
     c = CrawlingTest()
-    c.execute()
+    # c.execute_crawling()
+    c.world_code_labeling()
