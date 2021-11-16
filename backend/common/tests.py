@@ -12,4 +12,3 @@ if __name__ == '__main__':
     c = tf.matmul(a, b)
     print(c)
     # print(device_lib.list_local_devices())
-

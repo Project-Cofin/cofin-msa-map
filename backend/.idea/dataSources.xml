@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="organdb" uuid="95f2e5e3-0e25-47be-ac77-e85faf57699e">
+    <data-source source="LOCAL" name="organdb@localhost" uuid="98ae0893-9ca6-40ac-a615-880b94c77695">
       <driver-ref>mariadb</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
