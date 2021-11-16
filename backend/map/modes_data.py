@@ -44,7 +44,7 @@ class DbUploader():
                                        long=row['price'],
                                        total=row['price'],
                                        infected=row['price'],
-                                       med_point_id=m)
+                                       med_point=m)
             print('LOCAL MAP DATA UPLOADED SUCCESSFULLY!')
 
     def insert_world_map(self):

@@ -42,17 +42,6 @@ class CrawlingTest(object):
         cases_df = reader.csv(csvfile)
         countries_code_df = countries_code_df.loc[:, ['name', 'alpha-2']]
 
-
-        # cases_df = cases_df[cases_df['name'] == 'India'].name
-        # for val in cases_df['name']:
-        #     if countries_code_df[countries_code_df['name'] == val].values:
-        #         cases_df['short_name'] = countries_code_df[countries_code_df['name'] == 'India'].values[0][1]
-            # print(countries_code_df[countries_code_df['name'] == val])
-            # print(f'val: {val["name"]}')
-            # print(f'val: {val["alpha-2"]}')
-            # if val['name'] == cases_df[cases_df['Country']]
-            # print(str(val['name']).equals(str(cases_df['Country'])))
-            # print(str(val['name']))
         cases_df = pd.merge(cases_df, countries_code_df, left_on='name', right_on='name')
         cases_df.dropna(inplace=True)
         cases_df.rename(columns={'alpha-2': 'short_name'}, inplace=True)
