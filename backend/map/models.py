@@ -24,7 +24,7 @@ class Map(models.Model):
     long = models.TextField()
     population = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)])
     cases = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
-    med_point_id = models.ForeignKey(MedPoint, on_delete=models.CASCADE, null=True)
+    med_point = models.ForeignKey(MedPoint, on_delete=models.CASCADE, null=True)
 
     class Meta:
         db_table = "maps"

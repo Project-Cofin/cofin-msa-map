@@ -8,3 +8,9 @@ export { default as Geolocation } from 'features/map/components/Geolocation'
 // Pages
 export { default as LocalMapPage } from 'features/map/pages/LocalMapPage'
 export { default as WorldMapPage } from 'features/map/pages/WorldMapPage'
+
+// map Reducer
+export { default as map } from 'features/map/reducer/mapSlice'
+
+// map API
+export { default as mapAPI } from 'features/map/reducer/mapAPI'
