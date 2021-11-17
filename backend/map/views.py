@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view, parser_classes
 from map.modes_data import DbUploader
 from map.serializer import MapSerializer
 from map.models import Map
+from django.db.models import Q
 
 
 @api_view(['GET'])
@@ -19,9 +20,7 @@ def upload(request):
 @parser_classes([JSONParser])
 def world_maps(request):
     if request.method == 'GET':
-        # ic("VIEWS 에 GET 메소드입니다~")
-        all_region = Map.objects.filter(type='world').order_by('-cases')
-        serializer = MapSerializer(all_region, many=True)
-        # ic(serializer.data)
-        # ic(serializer.data)
+        all_region = Map.objects.filter(type='world').order_by('-cases')[:10]
+        korea = Map.objects.filter(name='S. Korea')
+        serializer = MapSerializer(all_region.union(korea), many=True)
         return JsonResponse(data=serializer.data, safe=False)
