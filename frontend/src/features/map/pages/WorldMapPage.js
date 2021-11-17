@@ -1,8 +1,8 @@
 import React from "react";
-import { WorldMap } from "..";
+import { World } from "..";
 
 export default function WorldMapPage() {
     return(<>
-        <WorldMap/>
+        <World/>
     </>)
 }

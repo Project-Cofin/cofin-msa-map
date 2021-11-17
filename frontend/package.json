@@ -29,6 +29,7 @@
     "react-simple-chatbot": "^0.6.1",
     "react-svg-worldmap": "^2.0.0-alpha.0",
     "react-toast-notifications": "^2.5.1",
+    "redux-logger": "^3.0.6",
     "redux-multilanguage": "^0.1.2",
     "styled-components": "^5.3.3"
   },
