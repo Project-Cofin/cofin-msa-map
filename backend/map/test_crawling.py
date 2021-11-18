@@ -51,5 +51,5 @@ class CrawlingTest(object):
 
 if __name__ == '__main__':
     c = CrawlingTest()
-    # c.execute_crawling()
+    c.execute_crawling()
     c.world_code_labeling()

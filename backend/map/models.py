@@ -20,10 +20,10 @@ class Map(models.Model):
     type = models.CharField(max_length=10)
     short_name = models.TextField()
     name = models.TextField()
-    lat = models.TextField()
-    long = models.TextField()
-    population = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)])
-    cases = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
+    latitude = models.FloatField(null=True)
+    longitude = models.FloatField(null=True)
+    population = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], null=True)
+    cases = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)], null=True)
     med_point = models.ForeignKey(MedPoint, on_delete=models.CASCADE, null=True)
 
     class Meta:
