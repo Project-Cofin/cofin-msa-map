@@ -5,7 +5,6 @@ from rest_framework.decorators import api_view, parser_classes
 from map.modes_data import DbUploader
 from map.serializer import MapSerializer
 from map.models import Map
-from django.db.models import Q
 
 
 @api_view(['GET'])
@@ -13,14 +12,27 @@ from django.db.models import Q
 def upload(request):
     print('############ 1 ##########')
     DbUploader().insert_data()
-    return JsonResponse({'Product Upload': 'SUCCESS'})
+    return JsonResponse({'Map Data Upload': 'SUCCESS'})
 
 
 @api_view(['GET'])
 @parser_classes([JSONParser])
 def world_maps(request):
-    if request.method == 'GET':
-        all_region = Map.objects.filter(type='world').order_by('-cases')[:10]
-        korea = Map.objects.filter(name='S. Korea')
-        serializer = MapSerializer(all_region.union(korea), many=True)
-        return JsonResponse(data=serializer.data, safe=False)
+    all_region = Map.objects.filter(type='world').order_by('-cases')[:10]
+    korea = Map.objects.filter(name='S. Korea')
+    serializer = MapSerializer(all_region.union(korea), many=True)
+    return JsonResponse(data=serializer.data, safe=False)
+
+
+@api_view(['POST'])
+@parser_classes([JSONParser])
+def med_point_maps(request):
+    current_geo = request.data
+    # print(current_geo)
+    med_points = Map.objects.filter(type='medpoint').raw('SELECT *, (6371*acos(cos(radians(%s))*cos(radians(latitude))*cos(radians(longitude)'
+                                                         '-radians(%s))+sin(radians(%s))*sin(radians(latitude)))) '
+                                                         'AS distance FROM maps HAVING distance < 2 ORDER BY distance',
+                                                         [current_geo["latitude"], current_geo["longitude"], current_geo["latitude"]])
+    serializer = MapSerializer(med_points, many=True)
+    # print(serializer.data)
+    return JsonResponse(data=serializer.data, safe=False)

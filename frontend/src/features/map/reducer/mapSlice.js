@@ -6,28 +6,28 @@ const WORLD = async () => {
    return res.data
 }
 const MEDPOINT = async (x) => {
-    const res = await mapAPI.medPoint()
+    const res = await mapAPI.medPoint(x)
     return res.data
  }
-const MEDLIST = async (x) => {
-    const res = await mapAPI.medList()
+const MEDPOINTS = async (x) => {
+    const res = await mapAPI.medPoints(x)
     return res.data
  }
 const CASES = async (x) => {
-    const res = await mapAPI.cases()
+    const res = await mapAPI.cases(x)
     return res.data
 }
 
 export const worldMap = createAsyncThunk('/organ/world', WORLD)
-export const medPointMap = createAsyncThunk('/organ/med-point', MEDPOINT)
-export const medMapList = createAsyncThunk('/organ/med-list', MEDLIST)
+export const medPoint = createAsyncThunk('/organ/med-point', MEDPOINT)
+export const medPoints = createAsyncThunk('/organ/med-points', MEDPOINTS)
 export const casesMap = createAsyncThunk('/organ/cases', CASES)
 
 const mapSlice = createSlice({
   name: 'maps',
   initialState: {
     mapState: {
-      id:'', type:'', shortName:'', name:'', lat: '', long: '', population: '', cases: '', medPointId: ''
+      id:'', type:'', shortName:'', name:'', latitude: '', longitude: '', population: '', cases: '', medPointId: ''
     },
     mapsState: [],
     type: '',
@@ -40,10 +40,10 @@ const mapSlice = createSlice({
       state.mapsState = action.payload 
     //   window.location.href = `/login`
     },
-    [medPointMap.fulfilled]: ( state, action ) => { 
+    [medPoint.fulfilled]: ( state, action ) => { 
         state.mapState = action.payload 
     },
-    [medMapList.fulfilled]: ( state, action ) => { 
+    [medPoints.fulfilled]: ( state, action ) => { 
         state.mapsState = action.payload 
     },
     [casesMap.fulfilled]: ( state, action ) => { 
