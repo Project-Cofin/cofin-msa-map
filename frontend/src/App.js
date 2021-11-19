@@ -3,13 +3,14 @@ import { Home, Navigation } from 'features/common';
 import { Route, Redirect, Switch } from 'react-router-dom'
 // import { Route, Redirect, Switch } from 'react-router';
 import { Chat, Chat2 } from 'features/chatbot';
-import { LocalMapPage, WorldMapPage } from 'features/map';
+import { LocalMapPage, WorldMapPage, Geolocation } from 'features/map';
 
 function App() {
   return (<>
   {/* <ToastProvider placement="bottom-left"> */}
     {/* <Router> */}
     <Navigation/>
+    <Geolocation/>
     <Switch>
       <Route exact path='/' component = { Home }/>
       <Redirect from='/home' to = { '/' }/>
