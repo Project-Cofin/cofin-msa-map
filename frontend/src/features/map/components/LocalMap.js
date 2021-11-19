@@ -19,9 +19,9 @@ function LocalMap() {
     };
 
     var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-    var positions = med_points.map(x => {return {content: `<div style="padding:5px; border-radius: 15px;">${x.short_name}</div>`, 
+    var positions = med_points.map(x => {return {content: `<div style="padding:0 3em; border-radius: 15px;">${x.name}</div>`, 
                                                  latlng: new kakao.maps.LatLng(x.latitude, x.longitude)}})
-    positions = [...positions, {content: `<div style="padding:5px; border-radius: 15px;">내 위치</div>`, latlng: new kakao.maps.LatLng(geoInfo[0], geoInfo[1])}]
+    positions = [...positions, {content: `<div style="padding:0 3em; border-radius: 15px;">내 위치</div>`, latlng: new kakao.maps.LatLng(geoInfo[0], geoInfo[1])}]
     console.log(positions)
     // 마커를 표시할 위치와 내용을 가지고 있는 객체 배열입니다 
     // var positions = [

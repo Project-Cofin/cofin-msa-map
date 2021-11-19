@@ -33,7 +33,7 @@ export default function World() {
     return (<>
         <WorldMapDiv className="App" >
             <WorldMap color="red" title="Top 10 Coronavirus Rates" value-suffix="people" size="xxl" 
-            data={maps.map(x => {return {country: x.short_name, value: parseInt(x.cases)}})} 
+            data={maps.map(x => {return {country: x.meta, value: parseInt(x.cases)}})} 
             frame={true} styleFunction={stylingFunction} />
         </WorldMapDiv>
     </>) 

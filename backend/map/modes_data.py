@@ -1,4 +1,6 @@
 import os
+import re
+
 import django
 import csv
 import sys
@@ -17,9 +19,10 @@ class DbUploader():
         self.vo.context = 'map/data/'
 
     def insert_data(self):
-        # self.insert_med_point()
-        # self.insert_world_map()
+        self.insert_med_point()
+        self.insert_world_map()
         self.insert_map_with_med_geo()
+        self.insert_map_with_cases_geo()
 
     def insert_med_point(self):
         self.vo.fname = 'med_point_20211115.csv'
@@ -37,16 +40,15 @@ class DbUploader():
         with open(self.csvfile, newline='', encoding='utf8') as csvfile:
             data_reader = csv.DictReader(csvfile)
             for row in data_reader:
-                # self.trans_geo(row['주소'])
                 m = MedPoint()
                 med_point = MedPoint.objects.all().filter(med_point_name=row['의료기관명']).values()[0]
                 m.id = med_point['id']
-                if not Map.objects.filter(short_name=row['의료기관명']).exists():
+                if not Map.objects.filter(name=row['의료기관명']).exists():
                     geo = self.trans_geo(row['주소'])
                     if geo != 0:
                         Map.objects.create(type='medpoint',
-                                           short_name=row['의료기관명'],
-                                           name=row['주소'],
+                                           name=row['의료기관명'],
+                                           meta=row['주소'],
                                            latitude=geo['lat'],
                                            longitude=geo['long'],
                                            med_point=m)
@@ -54,22 +56,15 @@ class DbUploader():
     def trans_geo(self, addr):
         url = 'https://dapi.kakao.com/v2/local/search/address.json?query=' + addr
         headers = {"Authorization": "KakaoAK 494e0b25b56b815a43298d2314a551a0"}
-        # get 방식으로 주소를 포함한 링크를 헤더와 넘기면 result에 json형식의 주소와 위도경도 내용들이 출력된다.
         result = json.loads(str(requests.get(url, headers=headers).text))
         status_code = requests.get(url, headers=headers).status_code
         if (status_code != 200):
-            # print(f"ERROR: Unable to call rest api, http_status_coe: {status_code}")
             return 0
-
-        # print(requests.get(url, headers=headers))
-        # print(result)
 
         try:
             match_first = result['documents'][0]['address']
             long = match_first['x']
             lat = match_first['y']
-            # print(lon, lat)
-            # print(f'위도: {match_first["y"]}, 경도: {match_first["x"]}')
 
             return {'long': long, 'lat': lat}
         except IndexError:  # match값이 없을때
@@ -77,7 +72,44 @@ class DbUploader():
         except TypeError:  # match값이 2개이상일때
             return 0
 
+    def insert_map_with_cases_geo(self):
+        self.vo.fname = 'new_data/message.csv'
+        self.csvfile = self.reader.new_file(self.vo)
+        with open(self.csvfile, newline='', encoding='utf8') as csvfile:
+            data_reader = csv.DictReader(csvfile)
+            for row in data_reader:
+                val = self.test_read_address(row['내용'])
+                word_set = ['None', '성동구청', '강동구청', '이동동선', '성동구청', '이동경로']
+                if val not in word_set:
+                    geo = self.trans_geo(val)
+                    if geo != 0:
+                        Map.objects.create(type='cases',
+                                           name=val,
+                                           meta=f'{row["연"]}-{"%02d"%int(row["월"])}-{"%02d"%int(row["일"])}',
+                                           latitude=geo['lat'],
+                                           longitude=geo['long'])
 
+    def test_read_address(self, message):
+        found = re.search('\w+로 ?\w+길 ?\d+', message)
+        if found is not None:
+            return found[0]
+
+        found = re.search('\w+로 ?\d+길 ?\d+', message)
+        if found is not None:
+            return found[0]
+
+        found = re.search('\w+로 ?\d+', message)
+        if found is not None:
+            return found[0]
+
+        found = re.search('\w+동 ?\d+', message)
+        if found is not None:
+            return found[0]
+
+        found = re.search('\w+동 ?\w+', message)
+        if found is not None:
+            return found[0]
+        return 'None'
 
     def insert_world_map(self):
         self.vo.fname = 'new_data/integrated_cases.csv'
@@ -90,8 +122,8 @@ class DbUploader():
                 # m.id = map['id']
                 if not Map.objects.filter(name=row['name']).exists():
                     Map.objects.create(type='world',
-                                           short_name=row['short_name'],
                                            name=row['name'],
+                                           meta=row['short_name'],
                                            population=row['population'],
                                            cases=row['cases']
                                        )
