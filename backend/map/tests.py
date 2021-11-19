@@ -1,12 +1,10 @@
 import csv
 import json
 
-from django.test import TestCase
 from sphinx.util import requests
 
 from common.models import ValueObject, Reader
-# from map.models import Map, MedPoint
-
+import re
 
 class GetLatLng:
     def __init__(self):
@@ -38,29 +36,61 @@ class GetLatLng:
         except TypeError:  # match값이 2개이상일때
             return 0
 
-    # def loop_trans(self):
-    #     vo = ValueObject()
-    #     reader = Reader()
-    #     vo.context = 'data/'
-    #     vo.fname = 'med_point_20211115.csv'
-    #     self.csvfile = reader.new_file(vo)
-    #     with open(self.csvfile, newline='', encoding='utf8') as csvfile:
-    #         data_reader = csv.DictReader(csvfile)
-    #         for row in data_reader:
-    #             # self.trans_geo(row['주소'])
-    #             m = MedPoint()
-    #             med_point = MedPoint.objects.all().filter(med_point_name=row['의료기관명']).values()[0]
-    #             m.id = med_point['id']
-    #             geo = self.trans_geo(row['주소'])
-    #             Map.objects.create(type='medpoint',
-    #                                short_name=row['의료기관명'],
-    #                                name=row['주소'],
-    #                                lat=geo['lat'],
-    #                                long=geo['long'],
-    #                                med_point=m)
+    def read_message(self):
+        vo = ValueObject()
+        vo.context = 'data/'
+        vo.fname = 'seoul_message'
+        reader = Reader()
+        csvfile = reader.new_file(vo)
+        message = reader.csv(csvfile)
+        target_string = ['코로나', '방문', '검사']
+        # target_string.append('서초구')
+        message = message[message['내용'].map(lambda x: all(string in x for string in target_string))]
+        # print(message)
+        message.to_csv(vo.context+'new_data/message.csv', index=False)
 
+    def test_read_address(self, message):
+        # found = re.search('로', message).end()
+        found = re.search('\w+로 ?\w+길 ?\d+', message)
+        if found is not None:
+            return found[0]
+
+        found = re.search('\w+로 ?\d+길 ?\d+', message)
+        if found is not None:
+            return found[0]
+
+        found = re.search('\w+로 ?\d+', message)
+        if found is not None:
+            return found[0]
+
+        found = re.search('\w+동 ?\d+', message)
+        if found is not None:
+            return found[0]
+
+        found = re.search('\w+동 ?\w+', message)
+        if found is not None:
+            return found[0]
+        return 'None'
+
+    def address_list(self):
+        vo = ValueObject()
+        vo.context = 'data/new_data/'
+        vo.fname = 'message.csv'
+        reader = Reader()
+        self.csvfile = reader.new_file(vo)
+        with open(self.csvfile, newline='', encoding='utf8') as csvfile:
+            data_reader = csv.DictReader(csvfile)
+            for row in data_reader:
+                val = self.test_read_address(row['내용'])
+                word_set = ['None', '성동구청', '강동구청', '이동동선', '성동구청', '이동경로']
+                if val not in word_set:
+                    print(val)
 
 if __name__ == '__main__':
     g = GetLatLng()
-    g.trans_geo('경기도 파주시 중앙로 207')
-    # g.loop_trans()
+    # g.trans_geo('경기도 파주시 중앙로 207')
+    # g.read_message()
+    # print(g.test_read_address('[서초구청] 7.23~24/7.28~31(09시~16시). 하나은행 서초동지점(서초대로 286) 방문자는 코로나19 유증상시 서초구 선별진료소에서 검사바랍니다.'))
+    # print(g.test_read_address('[서초구청] 2020.12.3(목)~12.13(일) 정곡빌딩 동관(서초구 법원로16) 방문하신 분은 가까운 선별진료소에서 코로나19 검사 받으시기 바랍니다.'))
+    # print(g.test_read_address('[성북구청]8.20.(목)14:09~15:06 성북동누룽지백숙(성북동,성북로31길9)방문자는 증상유무에 상관없이 선별진료소에서 코로나19검사를 받으시기 바랍니다.'))
+    g.address_list()

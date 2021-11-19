@@ -21,13 +21,13 @@ const CASES = async (x) => {
 export const worldMap = createAsyncThunk('/organ/world', WORLD)
 export const medPoint = createAsyncThunk('/organ/med-point', MEDPOINT)
 export const medPoints = createAsyncThunk('/organ/med-points', MEDPOINTS)
-export const casesMap = createAsyncThunk('/organ/cases', CASES)
+export const casesPoints = createAsyncThunk('/organ/cases', CASES)
 
 const mapSlice = createSlice({
   name: 'maps',
   initialState: {
     mapState: {
-      id:'', type:'', shortName:'', name:'', latitude: '', longitude: '', population: '', cases: '', medPointId: ''
+      id:'', type:'', name:'', meta:'', latitude: '', longitude: '', population: '', cases: '', medPointId: ''
     },
     mapsState: [],
     type: '',
@@ -46,7 +46,7 @@ const mapSlice = createSlice({
     [medPoints.fulfilled]: ( state, action ) => { 
         state.mapsState = action.payload 
     },
-    [casesMap.fulfilled]: ( state, action ) => { 
+    [casesPoints.fulfilled]: ( state, action ) => { 
         state.mapsState = action.payload 
     },
   }

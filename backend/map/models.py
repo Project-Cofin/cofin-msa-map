@@ -16,10 +16,10 @@ class MedPoint(models.Model):
 class Map(models.Model):
     use_in_migrations = True
     # type - l(local), w(world)
-    # name - med_point_name Or world_name, address - detail_med_point
+    # name - region name, meta - info(address, date)
     type = models.CharField(max_length=10)
-    short_name = models.TextField()
     name = models.TextField()
+    meta = models.TextField()
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     population = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], null=True)

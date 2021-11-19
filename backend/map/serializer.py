@@ -5,8 +5,8 @@ from .models import Map as map
 
 class MapSerializer(serializers.Serializer):
     type = serializers.CharField()
-    short_name = serializers.CharField()
     name = serializers.CharField()
+    meta = serializers.CharField()
     latitude = serializers.CharField()
     longitude = serializers.CharField()
     population = serializers.CharField()

@@ -26,13 +26,25 @@ def world_maps(request):
 
 @api_view(['POST'])
 @parser_classes([JSONParser])
-def med_point_maps(request):
+def med_points(request):
     current_geo = request.data
     # print(current_geo)
-    med_points = Map.objects.filter(type='medpoint').raw('SELECT *, (6371*acos(cos(radians(%s))*cos(radians(latitude))*cos(radians(longitude)'
+    med_points = Map.objects.raw('SELECT *, (6371*acos(cos(radians(%s))*cos(radians(latitude))*cos(radians(longitude)'
                                                          '-radians(%s))+sin(radians(%s))*sin(radians(latitude)))) '
-                                                         'AS distance FROM maps HAVING distance < 2 ORDER BY distance',
+                                                         'AS distance FROM maps WHERE type = "medpoint" HAVING distance < 2 ORDER BY distance',
                                                          [current_geo["latitude"], current_geo["longitude"], current_geo["latitude"]])
     serializer = MapSerializer(med_points, many=True)
     # print(serializer.data)
+    return JsonResponse(data=serializer.data, safe=False)
+
+
+@api_view(['POST'])
+@parser_classes([JSONParser])
+def cases_points(request):
+    current_geo = request.data
+    cases_points = Map.objects.raw('SELECT *, (6371*acos(cos(radians(%s))*cos(radians(latitude))*cos(radians(longitude)'
+                                             '-radians(%s))+sin(radians(%s))*sin(radians(latitude)))) '
+                                             'AS distance FROM maps WHERE type="cases" HAVING distance < 2 and date(meta) > date(subdate(now(), INTERVAL 1 YEAR))',
+                                             [current_geo["latitude"], current_geo["longitude"], current_geo["latitude"]])
+    serializer = MapSerializer(cases_points, many=True)
     return JsonResponse(data=serializer.data, safe=False)
