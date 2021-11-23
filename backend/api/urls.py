@@ -22,5 +22,6 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', HelloAPI),
     path('api/hello', HelloAPI),
-    path('api/map/', include('map.urls'))
+    path('api/map/', include('map.urls')),
+    path('api/chatbot/', include('chatbot.urls'))
 ]
