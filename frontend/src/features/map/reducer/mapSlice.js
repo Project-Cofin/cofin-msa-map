@@ -38,16 +38,17 @@ const mapSlice = createSlice({
   extraReducers: {
     [worldMap.fulfilled]: ( state, action ) => { 
       state.mapsState = action.payload 
-    //   window.location.href = `/login`
     },
     [medPoint.fulfilled]: ( state, action ) => { 
         state.mapState = action.payload 
     },
     [medPoints.fulfilled]: ( state, action ) => { 
         state.mapsState = action.payload 
-    },
-    [casesPoints.fulfilled]: ( state, action ) => { 
+        // console.log(state.mapsState[0])
+      },
+      [casesPoints.fulfilled]: ( state, action ) => { 
         state.mapsState = action.payload 
+        // console.log(state.mapsState[0])
     },
   }
 

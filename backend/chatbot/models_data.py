@@ -11,7 +11,8 @@ class DbUploader():
         self.vo.context = 'chatbot/data/'
 
     def insert_data(self):
-        self.insert_health_status()
+        # self.insert_health_status()
+        pass
 
     def insert_health_status(self):
         self.vo.fname = 'health_status.csv'

@@ -1,94 +1,73 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { medPoints } from "../reducer/mapSlice";
-const { kakao } = window;
-
+import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import React, {useState, useMemo} from "react";
+import { useDispatch, useSelector } from 'react-redux';
+const { kakao } = window; 
 
 function LocalMap() {
-    const med_points = useSelector(state => state.map.mapsState)
-    
-    useEffect(() => {
-    var geoInfo = window.localStorage.getItem('sessionGeo').split(',')
-    // alert(geoInfo)
-    console.log(med_points)
-    var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
-    mapOption = { 
-        // center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        center: new kakao.maps.LatLng(geoInfo[0], geoInfo[1]), // 지도의 중심좌표
-        level: 5 // 지도의 확대 레벨
-    };
+    const [state, setState] = useState()
+    const geoInfo = window.localStorage.getItem('sessionGeo').split(',')
+    const [map, setMap] = useState()
+    let points = useSelector(state => state.map.mapsState.map(
+        x => {return {title: x.name,
+                      latlng: {lat: x.latitude, lng:x.longitude}}}
+    )) 
 
-    var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-    var positions = med_points.map(x => {return {content: `<div style="padding:0 3em; border-radius: 15px;">${x.name}</div>`, 
-                                                 latlng: new kakao.maps.LatLng(x.latitude, x.longitude)}})
-    positions = [...positions, {content: `<div style="padding:0 3em; border-radius: 15px;">내 위치</div>`, latlng: new kakao.maps.LatLng(geoInfo[0], geoInfo[1])}]
-    console.log(positions)
-    // 마커를 표시할 위치와 내용을 가지고 있는 객체 배열입니다 
-    // var positions = [
-    //     {
-    //         content: '<div style="padding:5px; border-radius: 15px;">내 위치</div>', 
-    //         latlng: new kakao.maps.LatLng(geoInfo[0], geoInfo[1])
-    //     },
-    //     {
-    //         content: '<div>카카오</div>', 
-    //         latlng: new kakao.maps.LatLng(33.450705, 126.570677)
-    //     },
-    //     {
-    //         content: '<div>생태연못</div>', 
-    //         latlng: new kakao.maps.LatLng(33.450936, 126.569477)
-    //     },
-    //     {
-    //         content: '<div>텃밭</div>', 
-    //         latlng: new kakao.maps.LatLng(33.450879, 126.569940)
-    //     },
-    //     {
-    //         content: '<div>근린공원</div>',
-    //         latlng: new kakao.maps.LatLng(33.451393, 126.570738)
-    //     }
-    // ];
-
-    for (var i = 0; i < positions.length; i ++) {
-        // 마커를 생성합니다
-        var marker = new kakao.maps.Marker({
-            map: map, // 마커를 표시할 지도
-            position: positions[i].latlng // 마커의 위치
-        });
-
-        // 마커에 표시할 인포윈도우를 생성합니다 
-        var infowindow = new kakao.maps.InfoWindow({
-            content: positions[i].content // 인포윈도우에 표시할 내용
-        });
-
-        // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
-        // 이벤트 리스너로는 클로저를 만들어 등록합니다 
-        // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-        kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
-        kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
-        kakao.maps.event.addListener(marker, 'click', function(){alert('hi!')})
-    }
-
-    // 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
-    function makeOverListener(map, marker, infowindow) {
-        return function() {
-            infowindow.open(map, marker);
-        };
-    }
-
-    // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
-    function makeOutListener(infowindow) {
-        return function() {
-            infowindow.close();
-        };
-    }
-  }, []);
-
-  return (
-    <div
-      className="map"
-      id="map"
-      style={{ width: "1000px", height: "500px", float: "left"}}
-    ></div>
-  );
+    return(<>
+    <Map // 지도를 표시할 Container
+          center={{
+            // 지도의 중심좌표
+            lat: geoInfo[0],
+            lng: geoInfo[1],
+          }}
+          style={{
+            width: "1000px",
+            height: "600px",
+          }}
+          level={5} // 지도의 확대 레벨
+          onCreate={setMap}
+        >
+            <MapMarker
+            position={{lat: geoInfo[0], lng:geoInfo[1]}}
+            title='현재 위치'
+            image={{
+                // 무료 마커이미지의 주소: https://www.flaticon.com/kr/
+                src: "https://cdn-icons.flaticon.com/png/512/5693/premium/5693914.png?token=exp=1637741898~hmac=fada3fe37d0197cf397c5d7713400e95", 
+                size: {
+                  width: 45,
+                  height: 45,
+                }, // 마커이미지의 크기입니다
+                options: {
+                  offset: {
+                    x: 25,
+                    y: 45,
+                  }, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+                },
+              }}
+            />
+          {points.map((position, index) => (
+            <MapMarker
+            key={`${position.title}-${position.latlng}`}
+            position={position.latlng}
+            title={position.title}
+            image={{
+              // 무료 마커이미지의 주소: https://www.flaticon.com/kr/
+              src: "https://cdn-icons.flaticon.com/png/512/5693/premium/5693879.png?token=exp=1637741898~hmac=59a8cfd836c546dab8091bb296ba21aa", 
+              size: {
+                width: 45,
+                height: 45,
+              }, // 마커이미지의 크기입니다
+              options: {
+                offset: {
+                  x: 25,
+                  y: 45,
+                }, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+              },
+            }}
+            />
+      ))}
+        </Map>
+        
+    </>);
 }
 
 export default LocalMap;
