@@ -6,8 +6,7 @@ const LocalMapInfo = () => {
     return(<>
         <InfoUl>
             <li>
-                <div><label>진료소 A</label></div>
-                <InfoDiv></InfoDiv>
+                <InfoDiv><div><label>진료소 A</label></div></InfoDiv>
             </li>
         </InfoUl>
     </>)

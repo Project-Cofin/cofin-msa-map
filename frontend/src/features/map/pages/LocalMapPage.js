@@ -4,7 +4,7 @@ import { Geolocation, LocalMap, LocalMapInfo, Options } from "..";
 const LocalMapPage = () => {
 
   return (<>
-    {/* <Geolocation/> */}
+    <Geolocation/>
     <Options/>
     <LocalMap/>
     <LocalMapInfo/>

@@ -8,9 +8,10 @@ const Geolocation = () => {
         if (navigator.geolocation) { // GPS를 지원하면
             navigator.geolocation.getCurrentPosition(function(position) {
             //   alert(position.coords.latitude + ' ' + position.coords.longitude);
-            dispatch(medPoints({'latitude': position.coords.latitude, 'longitude': position.coords.longitude}))
+            const latlng = [position.coords.latitude, position.coords.longitude]
+            dispatch(medPoints({'latitude': latlng[0], 'longitude': latlng[1]}))
             // dispatch(casesPoints({'latitude': position.coords.latitude, 'longitude': position.coords.longitude}))
-            window.localStorage.setItem('sessionGeo', [position.coords.latitude, position.coords.longitude])
+            window.localStorage.setItem('sessionGeo', [...latlng])
             }, function(error) {
               console.error(error);
             }, {
@@ -20,7 +21,7 @@ const Geolocation = () => {
             });
           } else {
             alert('GPS를 지원하지 않습니다');
-            window.localStorage.setItem('sessionGeo', ['37.5885933100535', '127.101500688631'])
+            window.localStorage.setItem('sessionGeo', ['37.49939596822029', '127.02902373805311'])
           }
     },[])
     return(<></>)
