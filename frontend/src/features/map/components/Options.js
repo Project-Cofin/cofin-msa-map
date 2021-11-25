@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { casesPoints, medPoints } from "../reducer/mapSlice";
 
 
-const Options = () => {
+export default function Options() {
     const dispatch = useDispatch()
     var geoInfo = window.localStorage.getItem('sessionGeo').split(',')
     return(<>
@@ -27,8 +27,6 @@ const Options = () => {
     </OptionUl>
     </>)
 }
-
-export default Options
 
 const OptionUl = styled.ul`
     list-style: none;

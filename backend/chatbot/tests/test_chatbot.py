@@ -13,7 +13,7 @@ class ChatbotTest(object):
 
     def fit_excute(self):
         # 데이터 읽어오기
-        train_file = "data/chatbot_data.csv"
+        train_file = "../data/chatbot_data.csv"
         data = pd.read_csv(train_file, delimiter=',')
         features = data['Q'].tolist()
         labels = data['label'].tolist()
@@ -81,7 +81,7 @@ class ChatbotTest(object):
 
     def eval_excute(self):
         # 데이터 읽어오기
-        train_file = "data/chatbot_data.csv"
+        train_file = "../data/chatbot_data.csv"
         data = pd.read_csv(train_file, delimiter=',')
         features = data['Q'].tolist()
         labels = data['label'].tolist()
@@ -100,7 +100,7 @@ class ChatbotTest(object):
         test_ds = ds.take(2000).batch(20)  # 테스트 데이터셋
 
         # 감정 분류 CNN 모델 불러오기
-        model = load_model('data/cnn_model.h5')
+        model = load_model('../data/cnn_model.h5')
         model.summary()
         model.evaluate(test_ds, verbose=2)
 

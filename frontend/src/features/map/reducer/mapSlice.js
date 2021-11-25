@@ -44,11 +44,9 @@ const mapSlice = createSlice({
     },
     [medPoints.fulfilled]: ( state, action ) => { 
         state.mapsState = action.payload 
-        // console.log(state.mapsState[0])
       },
       [casesPoints.fulfilled]: ( state, action ) => { 
         state.mapsState = action.payload 
-        // console.log(state.mapsState[0])
     },
   }
 

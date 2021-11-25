@@ -42,7 +42,7 @@ class NerTest:
 
     def execute(self):
         # 학습용 말뭉치 데이터를 불러옴
-        corpus = self.read_file('data/train.txt')
+        corpus = self.read_file('../data/train.txt')
 
         # 말뭉치 데이터에서 단어와 BIO 태그만 불러와 학습용 데이터셋 생성
         sentences, tags = [], []

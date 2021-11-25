@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const LocalMapInfo = () => {
+export default function LocalMapInfo() {
 
     return(<>
         <InfoUl>
@@ -11,8 +11,6 @@ const LocalMapInfo = () => {
         </InfoUl>
     </>)
 }
-
-export default LocalMapInfo
 
 const InfoDiv = styled.div`
     width: 200px;
