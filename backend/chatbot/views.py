@@ -15,9 +15,13 @@ def upload(request):
     return JsonResponse({'Chatbot Data Upload': 'SUCCESS'})
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 @parser_classes([JSONParser])
-def check_list(request):
-    selections = HealthStatus.objects.all()
-    serializer = HealthStatusSerializer(selections, many=True)
+def find_by_detail(request):
+    print('############ 1 ##########')
+    quest = request.data
+    answer = HealthStatus.objects\
+        .filter(symptom=quest['symptom'], details=quest['details'])
+        # .only('symptom', 'level', 'answer')
+    serializer = HealthStatusSerializer(answer, many=True)
     return JsonResponse(data=serializer.data, safe=False)
