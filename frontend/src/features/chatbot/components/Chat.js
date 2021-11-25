@@ -1,9 +1,12 @@
 import ChatBot from "react-simple-chatbot";
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { ThemeProvider } from "styled-components";
 import { render } from "@testing-library/react";
+import { useDispatch } from "react-redux";
+import { answer } from "../reducer/chatbotSlice";
+import { func } from "prop-types";
 
-const Chat = () => {
+export default function Chat() {
   return (
     <ThemeProvider
       theme={{
@@ -51,37 +54,16 @@ const Chat = () => {
   );
 };
 
-export default Chat;
-
-export class Post extends Component {
-  constructor(props) {
-    super(props);
-    const { steps } = this.props;
-    const { userinput } = steps;
-
-    // this.state = { submit, name, hobby };
-  }
-
-  componentDidMount() {
-    const userObject = {
-      submit: this.state.submit.value,
-      name: this.state.name.value,
-      hoby: this.state.hobby.value,
-    };
-    console.log(`data: ${JSON.stringify(userObject)}`);
-    // axios.post(`/api`, userObject)
-    // .then(res => {
-    //     console.log(res.status)
-    // }).catch(function(error) {
-    //     console.log(error);
-    // });
-  }
-
-  render() {
+export function Post(props){
+  const dispatch = useDispatch()
+  const [ text, setText] = useState()
+  useEffect(()=>{
+    setText(props.steps.userinput.value)
+    dispatch(answer(props.steps.userinput.value))
+  },[text])
     return (
       <>
-        <div>Thank you! I'll remember you.</div>
+      <div>{text}이(가) 라고 물어보신 것이 맞습니까?</div>
       </>
     );
-  }
 }

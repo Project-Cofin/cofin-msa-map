@@ -2,7 +2,7 @@ import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import React, {useState} from "react";
 import { useSelector } from 'react-redux';
 
-function LocalMap() {
+export default function LocalMap() {
     const geoInfo = window.localStorage.getItem('sessionGeo').split(',')
     const [map, setMap] = useState()
     let points = useSelector(state => state.map.mapsState.map(
@@ -65,5 +65,3 @@ function LocalMap() {
         
     </>);
 }
-
-export default LocalMap;

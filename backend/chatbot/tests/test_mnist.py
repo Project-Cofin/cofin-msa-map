@@ -67,7 +67,7 @@ class MnistTest(object):
         x_test = x_test / 255.0  # 데이터 정규화
 
         # 모델 불러오기
-        model = load_model('data/mnist_model.h5')
+        model = load_model('../data/mnist_model.h5')
         model.summary()
         model.evaluate(x_test, y_test, verbose=2)
 

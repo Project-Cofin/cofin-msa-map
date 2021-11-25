@@ -5,8 +5,9 @@ import {
 } from '@reduxjs/toolkit'
 import logger from 'redux-logger'
 import { map } from 'features/map'
+import { chatbot } from 'features/chatbot'
 
-const rootReducer = combineReducers({map})
+const rootReducer = combineReducers({map, chatbot})
 
 export const store = configureStore({
   reducer: rootReducer,

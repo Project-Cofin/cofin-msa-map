@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import { useDispatch } from "react-redux";
 import { medPoints } from "../reducer/mapSlice";
 
-const Geolocation = () => {
+export default function Geolocation() {
   const dispatch = useDispatch()
     useEffect(() => {
         if (navigator.geolocation) { // GPS를 지원하면
@@ -24,5 +24,3 @@ const Geolocation = () => {
     },[])
     return(<></>)
 }
-
-export default Geolocation
