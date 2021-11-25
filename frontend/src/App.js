@@ -10,7 +10,7 @@ function App() {
   {/* <ToastProvider placement="bottom-left"> */}
     {/* <Router> */}
     <Navigation/>
-    <Geolocation/>
+    {/* <Geolocation/> */}
     <Switch>
       <Route exact path='/' component = { Home }/>
       <Redirect from='/home' to = { '/' }/>

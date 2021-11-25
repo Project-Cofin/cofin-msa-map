@@ -1,26 +1,30 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { chatbot, chatbotAPI } from "..";
+import { chatbotAPI } from "..";
 
 const ANSWER = async (x) => {
-   const res = await chatbotAPI.findAnswer(x)
-  // console.log(`넘겨받은 페이로드: ${x}`)
-   const res = await x
-   return res.data
+  //  const res = await chatbotAPI.findAnswer(x)
+  console.log(`넘겨받은 페이로드: ${x}`)
+  //  const res = await x
+  //  return res.data
 }
-// const EXIST = async (x) => {
-//   const res = await chatbotAPI.exist(x)
-//   return res.data
-// }
+const STATUS = async (x) => {
+  const res = await chatbotAPI.statusAnswer(x)
+  console.log(`넘겨받은 status: ${res.data}`)
+  return res.data
+}
 
 
 export const answer = createAsyncThunk('/chat', ANSWER)
-// export const exist = createAsyncThunk('/chat', EXIST)
+export const answerStatus = createAsyncThunk('/status', STATUS)
 
 const chatbotSlice = createSlice({
   name: 'bot',
   initialState: {
     botState: {
-        answer: ''
+      answer: ''
+    },
+    healtState:{
+      symptom: '', details: '', level: '', answer: ''
     },
     botsState: [],
     type: '',
@@ -32,7 +36,9 @@ const chatbotSlice = createSlice({
     [answer.fulfilled]: ( state, action ) => { 
       state.botState = action.payload 
     },
-    
+    [answerStatus.fulfilled]: ( state, action ) => { 
+      state.healtState = action.payload 
+    },
   }
 
 })

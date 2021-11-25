@@ -4,5 +4,5 @@ from chatbot import views
 
 urlpatterns = [
     url(r'upload', views.upload),
-    url(r'check-list', views.check_list),
+    url(r'find-by-detail', views.find_by_detail),
 ]
