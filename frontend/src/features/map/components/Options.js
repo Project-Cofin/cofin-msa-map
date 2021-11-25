@@ -1,7 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { Geolocation } from "..";
 import { casesPoints, medPoints } from "../reducer/mapSlice";
 
 
@@ -13,7 +12,7 @@ const Options = () => {
         <li>
             <label>표시 대상 선택</label><br/>
             <select id="sel" onChange={(e) => {
-            if (e.target.value == 'medpoint'){
+            if (e.target.value === 'medpoint'){
                 dispatch(medPoints({'latitude': geoInfo[0], 'longitude': geoInfo[1]}))
             }else{
                 dispatch(casesPoints({'latitude': geoInfo[0], 'longitude': geoInfo[1]}))

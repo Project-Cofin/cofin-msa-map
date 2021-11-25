@@ -1,16 +1,14 @@
 import React, {useEffect} from "react";
 import { useDispatch } from "react-redux";
-import { casesPoints, medPoints } from "../reducer/mapSlice";
+import { medPoints } from "../reducer/mapSlice";
 
 const Geolocation = () => {
   const dispatch = useDispatch()
     useEffect(() => {
         if (navigator.geolocation) { // GPS를 지원하면
             navigator.geolocation.getCurrentPosition(function(position) {
-            //   alert(position.coords.latitude + ' ' + position.coords.longitude);
             const latlng = [position.coords.latitude, position.coords.longitude]
             dispatch(medPoints({'latitude': latlng[0], 'longitude': latlng[1]}))
-            // dispatch(casesPoints({'latitude': position.coords.latitude, 'longitude': position.coords.longitude}))
             window.localStorage.setItem('sessionGeo', [...latlng])
             }, function(error) {
               console.error(error);
