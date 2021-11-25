@@ -21,75 +21,28 @@ const Chat = () => {
       <ChatBot
         steps={[
           {
-            id: 'q-name',
-            message: 'What is your name??',
-            trigger: 'name',
+            id: 'welcome',
+            message: '안녕하세요~ 코핀 챗봇이에요 궁금한 사항을 물어봐주세요',
+            trigger: 'userinput',
           },
           {
-            id: 'name',
+            id: 'userinput',
             user: true,
-            trigger: 'a-name'
+            trigger: 'bot-response'
           },
+          // {
+          //   id: 'bot-response',
+          //   message: '질문 내용이 {previousValue}(이)가 맞습니까?',
+          //   trigger: 'user-input'
+          // },
+          
           {
-            id: 'a-name',
-            message: 'Hi {previousValue}, nice to meet you!',
-            trigger: 'q-hobby'
-          },
-          {
-              id: 'q-hobby',
-              message: 'What is your hobby?',
-              trigger: 'hobby'
-          },
-          {
-              id: 'hobby',
-              user: true,
-              trigger: 'a-hobby'
-            },
-          {
-            id: 'a-hobby',
-            message: "{previousValue}? That's cool!",
-            trigger: 'q-submit'
-          },
-          {
-            id: "q-submit",
-            message: "Can I remember you?",
-            trigger: "submit",
-          },
-          {
-            id: "submit",
-            options: [
-              { value: "y", label: "Yes", trigger: "end-message" },
-              { value: "n", label: "No", trigger: "no-submit" },
-            ],
-          },
-          {
-            id: "no-submit",
-            message: "Your information was not submitted.",
-            end: true,
-          },
-          {
-            id: "end-message",
+            id: "bot-response",
             component: <Post />,
             asMessage: true,
-            trigger: 'q-re-start'
+            trigger: 'userinput'
           },
-          {
-            id: 'q-re-start',
-            message: "Do you want to do it again?",
-            trigger: 're-start'
-          },
-          {
-            id: 're-start',
-            options: [
-              { value: 'y', label: "Yes", trigger: "q-name" },
-              { value: 'n', label: "No", trigger: "stop" },
-            ],
-          },
-          {
-            id: 'stop',
-            message: 'Ok! bye~',
-            end: true
-          }
+          
         ]}
         botAvatar={require("./data/icon.png").default}
         userAvatar={require("./data/user.png").default}
@@ -100,33 +53,13 @@ const Chat = () => {
 
 export default Chat;
 
-// export function Post(props) {
-//     const { steps } = props;
-//     const { submit, name, hobby } = steps;
-//     const state = { submit, name, hobby };
-//     // const keys = Object.getOwnPropertyNames(state)
-//     // console.log(keys)
-//     const userObject = {
-//       submit: state.submit.value,
-//       name: state.name.value,
-//       hoby: state.hobby.value,
-//     };
-//     console.log(`data: ${JSON.stringify(userObject)}`)
-//     return (
-//       <>
-//         <div>Thank you! I'll remember you.</div>
-//       </>
-//     );
-// }
-
-
 export class Post extends Component {
   constructor(props) {
     super(props);
     const { steps } = this.props;
-    const { submit, name, hobby } = steps;
+    const { userinput } = steps;
 
-    this.state = { submit, name, hobby };
+    // this.state = { submit, name, hobby };
   }
 
   componentDidMount() {
