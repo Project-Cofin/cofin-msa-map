@@ -18,10 +18,11 @@ def upload(request):
 @api_view(['POST'])
 @parser_classes([JSONParser])
 def find_by_detail(request):
-    print('############ 1 ##########')
+    print('############ 2 ##########')
     quest = request.data
+    print(quest)
     answer = HealthStatus.objects\
-        .filter(symptom=quest['symptom'], details=quest['details'])
+        .filter(symptom=quest['symptom'], details=quest['details']).get()
         # .only('symptom', 'level', 'answer')
-    serializer = HealthStatusSerializer(answer, many=True)
+    serializer = HealthStatusSerializer(answer)
     return JsonResponse(data=serializer.data, safe=False)

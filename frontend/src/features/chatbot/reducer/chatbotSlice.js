@@ -9,7 +9,6 @@ const ANSWER = async (x) => {
 }
 const STATUS = async (x) => {
   const res = await chatbotAPI.statusAnswer(x)
-  console.log(`넘겨받은 status: ${res.data}`)
   return res.data
 }
 
@@ -23,10 +22,10 @@ const chatbotSlice = createSlice({
     botState: {
       answer: ''
     },
-    healtState:{
+    botsState: [],
+    healthState:{
       symptom: '', details: '', level: '', answer: ''
     },
-    botsState: [],
     type: '',
     keyword: '',
     params: {}
@@ -37,12 +36,13 @@ const chatbotSlice = createSlice({
       state.botState = action.payload 
     },
     [answerStatus.fulfilled]: ( state, action ) => { 
-      state.healtState = action.payload 
+      state.healthState = action.payload 
     },
   }
 
 })
 export const currentBotState = state => state.bot.botState
 export const currentBotsState = state => state.bot.botsState
+export const currentHealthState = state => state.bot.healthState
 // export const currentBotParam = state => state.bot.param
 export default chatbotSlice.reducer;
