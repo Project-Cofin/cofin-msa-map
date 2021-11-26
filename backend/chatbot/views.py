@@ -26,3 +26,12 @@ def find_by_detail(request):
         # .only('symptom', 'level', 'answer')
     serializer = HealthStatusSerializer(answer)
     return JsonResponse(data=serializer.data, safe=False)
+
+
+@api_view(['GET'])
+@parser_classes([JSONParser])
+def find_all(request):
+    print('############ 3 ##########')
+    answer = HealthStatus.objects.raw("select * from health_status group by symptom")
+    serializer = HealthStatusSerializer(answer, many=True)
+    return JsonResponse(data=serializer.data, safe=False)

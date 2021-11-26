@@ -7,9 +7,11 @@ const headers = {
 
 const findAnswer = x => axios.post(`${SERVER}/find-answer`, JSON.stringify(x), {headers})
 const statusAnswer = x => axios.post(`${SERVER}/find-by-detail`, JSON.stringify(x), {headers})
+const getStatus = () => axios.get(`${SERVER}/find-all`)
 // const exist = x => axios.get(`${SERVER}/exist/${x}`)
 
 export default {
   findAnswer,
   statusAnswer,
+  getStatus
 }

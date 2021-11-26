@@ -11,10 +11,15 @@ const STATUS = async (x) => {
   const res = await chatbotAPI.statusAnswer(x)
   return res.data
 }
+const INITSTATUS = async() => {
+  const res = await chatbotAPI.getStatus()
+  return res.data
+}
 
 
 export const answer = createAsyncThunk('/chat', ANSWER)
 export const answerStatus = createAsyncThunk('/status', STATUS)
+export const initStatus = createAsyncThunk('/initStatus', INITSTATUS)
 
 const chatbotSlice = createSlice({
   name: 'bot',
@@ -23,9 +28,10 @@ const chatbotSlice = createSlice({
       answer: ''
     },
     botsState: [],
-    healthState:{
-      symptom: '', details: '', level: '', answer: ''
-    },
+    // healthState:{
+    //   symptom: '', details: '', level: '', answer: ''
+    // },
+    healthStates:{},
     type: '',
     keyword: '',
     params: {}
@@ -33,11 +39,18 @@ const chatbotSlice = createSlice({
   reducers: {},
   extraReducers: {
     [answer.fulfilled]: ( state, action ) => { 
-      state.botState = action.payload 
+      state.botState = action.payload
     },
     [answerStatus.fulfilled]: ( state, action ) => { 
-      state.healthState = action.payload 
+      state.healthStates = {...state.healthStates, [action.payload.symptom]:action.payload}
     },
+    [initStatus.fulfilled]: ( state, action) => {
+      window.localStorage.setItem('counter', 0)
+      action.payload.forEach(element => {
+        state.healthStates = {...state.healthStates, [element['symptom']]:action.payload}
+      });
+      
+    }
   }
 
 })
