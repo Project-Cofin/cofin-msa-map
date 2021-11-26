@@ -3,7 +3,7 @@ import React, { Component, useEffect, useState } from "react";
 import { ThemeProvider } from "styled-components";
 import { render } from "@testing-library/react";
 import { useDispatch, useSelector } from "react-redux";
-import { answer, answerStatus } from "../reducer/chatbotSlice";
+import { answer, answerStatus, currentHealthState } from "../reducer/chatbotSlice";
 import { func } from "prop-types";
 
 export default function Chat() {
@@ -119,7 +119,8 @@ export function Ask(props){
     return (
       <>
       <div>{text}이(가) 라고 질문하신 것이 맞습니까?</div>
-      {text == "체크리스트" ? <button onClick={() => props.triggerNextStep({trigger: 'askFever'})}>
+      {text == "체크리스트" ? <button onClick={() => props.triggerNextStep({trigger: 'askFever'})} 
+      style={{border:"0.5px", background:'burlywood', borderRadius: "9px", margin: "1em 2em 5px 2em", cursor: "pointer", boxShadow: "1px 1px 3px 1px #cbbab0"}} >
         백신 접종 증상 체크하기!
       </button>: <></>}
       {/* <div>이(가) 라고 질문하신 것이 맞습니까?</div> */}
@@ -129,18 +130,19 @@ export function Ask(props){
 
 
 export function CheckStatus(props){
+  
   const dispatch = useDispatch()
-  const choice = useSelector((state)=>state.chatbot.healtState)
+  const choice = useSelector((state)=>state.chatbot.healthState)
+  // const text = choice
+  // console.log(JSON.parse(JSON.stringify(choice)))
   useEffect(()=>{
-    dispatch(answerStatus({'symptom': props.previousStep.value, 'details':props.previousStep.message}))
-    // console.log(props.previousStep.message)
-    // console.log(props.previousStep.value)
+    dispatch(answerStatus({'symptom': props.previousStep.value.slice(0, -1), 'details':props.previousStep.message}))
   },[])
     return (
       <>
-      {/* <div>{choice['details']} 에 해당하십니까?</div> */}
+      <div>{choice['answer']}</div>
       {/* <div>{} 을 선택하셨습니다.</div> */}
-      <button style={{borderRadius: "9px", marginLeft: "2em", cursor: "pointer"}} onClick={() => {props.triggerNextStep({trigger: 'askPain'})
+      <button style={{border:"0.5px", background:'burlywood', borderRadius: "9px", margin: "1em 2em 5px 2em", cursor: "pointer", boxShadow: "1px 1px 3px 1px #cbbab0"}} onClick={() => {props.triggerNextStep({trigger: 'askPain'})
     }}>
         이어서 진행하기
       </button>

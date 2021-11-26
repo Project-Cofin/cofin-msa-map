@@ -1,5 +1,5 @@
 import axios from "axios"
-const SERVER = 'http://localhost:8080/api/chatbot'
+const SERVER = 'http://127.0.0.1:8000/api/chatbot'
 const headers = {
   'Content-Type': 'application/json',
   'Authorization': 'JWT fefege..'
