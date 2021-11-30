@@ -1,98 +1,146 @@
-from bs4 import BeautifulSoup
-import requests
-from openpyxl import Workbook
-
-
+from koalanlp.Util import initialize, finalize
+from koalanlp.proc import *
+from koalanlp import API
+import os
+import sys
 
 class Blog:
     def __init__(self):
-        # ------------------------ 바꿔야 하는 부분 -----------------------------
-        # 생각해둔 키워드
-        querys = ['안녕', '반가워']
-        # 라벨
-        label = 1
-        # 파일 이름 (감정 + .xlsx)
-        file_name = "tmp.xlsx"
-        # -------------------------------------------------------------------------
+        self.ETRI_API_KEY = "36e9fdcf-32bf-4ded-a4df-ad257513b8e5" # ETRI에서 발급받은 키를 입력하세요.
 
+    def execute(self):
+        # 초기화 합니다.
+        initialize(java_options="-Xmx4g -Dfile.encoding=utf-8", KKMA="2.0.2", EUNJEON="2.0.2", ETRI="2.0.2")
 
-        # 전체 샘플 문장 개수 카운트
-        cnt = 1
-        # 다음 문장과 같은자를 비교하기 위한 이전 문장
-        before = ""
-        # 페이지가 끝이 난 경우를 확인하기 위한 이전 문장
-        first_string = ""
-        # 페이지가 끝났을 경우를 확인하기 위한 카운트
-        # 이전 문장과 두 번 이상 비슷할 경우 또는 이전 페이지와 현재 페이지의 첫 문장이 두 번 이상 비슷할 경우
-        # 검색어에 의한 페이지가 끝났다고 판단
-        mini_cnt = 0
-        max_mini_cnt = 0
-        finish_cnt = 0
-        max_finish_cnt = 0
-        finish_flag = False
+        # 품사분석기 이용법
+        tagger = Tagger(API.EUNJEON)
+        tagged = tagger.tag("안녕하세요. 눈이 오는 설날 아침입니다.")
+        print(tagged)
 
-        wb = Workbook()
-        ws = wb.active
-        # 검색 페이지 수
-        page = 1
+        # 의존구문분석기 이용법
+        parser = Parser(API.KKMA)
+        parsed = parser.analyze("안녕하세요. 눈이 오는 설날 아침입니다.")
+        print(parsed)
 
-        for q in querys:
-            # 1 페이지부터 시작
-            finish_flag = False
-            page = 1
-            mini_cnt = 0
-            max_mini_cnt = 0
-            query_cnt = 0
-            finish_cnt = 0
-            max_finish_cnt = 0
-            while (1):
-                if (finish_flag):
-                    break
+        # ETRI API 이용법
+        rolelabeler = RoleLabeler(API.ETRI, etri_key=self.ETRI_API_KEY)
+        paragraph = rolelabeler.analyze("첫 분석을 시도해봅시다!")
+        print(paragraph)
+        print(paragraph[0].getRoles())
 
-                req = requests.get("https://kin.naver.com/search/list.nhn?query=" + q + "&page=" + str(page))
-                html = req.text
-                soup = BeautifulSoup(html, 'html.parser')
-                mytitles = soup.select(
-                    '#s_content > div.section > ul > li:nth-child(10) > dl > dt > a'
-                )
-                for i in range(1, 11):
-                    # 문장 추출
-                    if (len(soup.select('#s_content > div.section > ul > li:nth-child(%i) > dl > dt > a' % i)) == 0):
-                        finish_flag = True
-                        break
+        # Data classes
+        sentence = parsed[1]  # 두번째 문장인, "눈이 오는 설날 아침입니다."를 선택합니다.
 
-                    string = (soup.select('#s_content > div.section > ul > li:nth-child(%i) > dl > dt > a' % i))[0].text
-                    print('[' + q + ']', string)
-                    # 문장 내용
-                    ws['A' + str(cnt)] = string
-                    # 라벨
-                    ws['B' + str(cnt)] = label
-                    cnt = cnt + 1
-                    query_cnt = query_cnt + 1
-                    if (query_cnt % 10 == 0):
-                        if (string == first_string):
-                            finish_cnt = finish_cnt + 1
-                            if (finish_cnt > max_finish_cnt):
-                                max_finish_cnt = finish_cnt
-                        else:
-                            finish_cnt = 0
-                        first_string = string
+        wordAt0 = sentence[0]  # 첫번째 어절을 선택해봅니다.
+        print(wordAt0.exists(lambda m: m.isPredicate()))  # 첫번째 어절에, 용언(동사/형용사)을 포함한 형태소가 있는지 확인합니다.
+        print(sentence.exists(lambda w: w.exists(lambda m: m.isNoun())))  # 문장 전체에 체언(명사 등)을 포함한 어절이 있는지 확인합니다.
+        print(sentence.getNouns())  # 문장에서 체언만 추출합니다.
+        print(sentence.getVerbs())  # 문장에서 용언만 추출합니다.
 
-                    if (before == string):
-                        mini_cnt = mini_cnt + 1
-                        if (max_mini_cnt < mini_cnt):
-                            max_mini_cnt = mini_cnt
-                    else:
-                        mini_cnt = 0
-                    before = string
-                # wb.save(file_name)
-                print(file_name)
-                page = page + 1
-                if (max_mini_cnt > 1):
-                    finish_flag = True
-                if (max_finish_cnt > 1):
-                    finish_flag = True
-        print(cnt)
+        finalize()  # KoalaNLP 사용을 종료합니다.
+
+    def etri_api_usage(self):
+        initialize(ETRI='LATEST')
+        labeler = RoleLabeler(API.ETRI, etri_key=self.ETRI_API_KEY)
+        # recognizer = EntityRecognizer(etri_key=API_KEY)
+        # parser = Parser(etri_key=API_KEY)
+        # tagger = Tagger(etri_key=API_KEY)
+
+        while True:
+            text = input("분석할 문장을 입력하세요>> ").strip()
+
+            if len(text) == 0:
+                break
+
+            sentences = labeler(text)
+
+            for sent in sentences:
+                print("===== Sentence =====")
+                print(sent.singleLineString())
+
+                entities = sent.getEntities()
+                if len(entities) > 0:
+                    print("# Named Entities")
+
+                    for entity in entities:
+                        print("[%s]는 %s 유형의 개체명으로, 형태소 [%s]를 포함합니다." % (entity.getSurface(),
+                                                                        str(entity.getFineLabel()),
+                                                                        " ".join(str(m) for m in entity)))
+
+                dependencies = sent.getDependencies()
+                if len(dependencies) > 0:
+                    print("# Dependency Parse")
+
+                    for edge in dependencies:
+                        print("[%s]는 [%s]의 %s-%s" % (edge.getDependent().getSurface(),
+                                                     edge.getGovernor().getSurface() if edge.getGovernor() is not None else "ROOT",
+                                                     str(edge.getType()),
+                                                     str(edge.getDepType())))
+
+                roles = sent.getRoles()
+                if len(roles) > 0:
+                    print("# Role Labeling")
+
+                    for edge in roles:
+                        print("[%s]는 [%s]의 %s" % (edge.getArgument().getSurface(),
+                                                  edge.getPredicate().getSurface(),
+                                                  str(edge.getLabel())))
+
+        finalize()
+
+    def sentence_split_usage(self):
+        initialize(OKT='LATEST')  #: HNN=2.0.3
+
+        splitter = SentenceSplitter(API.OKT)
+
+        while True:
+            text = input("분석할 문장을 입력하세요>> ").strip()
+
+            if len(text) == 0:
+                break
+
+            sentences = splitter(text)
+
+            print("===== Sentence =====")
+            for i, sent in enumerate(sentences):
+                print("[%s] %s" % (i, sent))
+
+        finalize()
+
+    def dep_parser_usage(self):
+        initialize(KKMA='LATEST')  #: HNN=2.0.4, ETRI=2.0.4
+
+        parser = Parser(API.KKMA)
+
+        while True:
+            text = input("분석할 문장을 입력하세요>> ").strip()
+
+            if len(text) == 0:
+                break
+
+            sentences = parser(text)
+
+            for sent in sentences:
+                print("===== Sentence =====")
+                print(sent.singleLineString())
+                print("# Dependency Parse result")
+
+                dependencies = sent.getDependencies()
+                if len(dependencies) > 0:
+                    for edge in dependencies:
+                        print("[%s]는 [%s]의 %s-%s" % (edge.getDependent().getSurface(),
+                                                     edge.getGovernor().getSurface() if edge.getGovernor() is not None else "ROOT",
+                                                     str(edge.getType()),
+                                                     str(edge.getDepType())))
+                else:
+                    print("(Unexpected) NULL!")
+
+        finalize()
+
 
 if __name__ == '__main__':
     b = Blog()
+    # b.execute()
+    # b.etri_api_usage()
+    # b.sentence_split_usage()
+    b.dep_parser_usage()
