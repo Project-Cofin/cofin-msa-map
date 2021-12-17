@@ -1,9 +1,8 @@
 import pandas as pd
 import tensorflow as tf
 from tensorflow.keras import preprocessing
-from tensorflow.keras.models import Model, load_model
+from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Embedding, Dense, Dropout, Conv1D, GlobalMaxPool1D, concatenate
-from test_preprocess import Preprocess
 
 
 class IntentChat:
