@@ -47,6 +47,7 @@ class RenameCode(object):
         df.loc[(df.name == "Micronesia (Federated States of)"), 'name'] = 'Micronesia'
         df.to_csv(vo.context + 'new_data/new_iso_countries.csv', index=False)
 
+
 if __name__ == '__main__':
     r = RenameCode()
     r.excute()

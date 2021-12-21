@@ -49,6 +49,7 @@ class CrawlingTest(object):
         cases_df.to_csv(vo.context+'integrated_cases.csv', index=False)
         # print(cases_df.head(3))
 
+
 if __name__ == '__main__':
     c = CrawlingTest()
     c.execute_crawling()

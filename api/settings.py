@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'map',
-    'chatbot',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',

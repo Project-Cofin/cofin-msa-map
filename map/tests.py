@@ -6,6 +6,7 @@ from sphinx.util import requests
 from common.models import ValueObject, Reader
 import re
 
+
 class GetLatLng:
     def __init__(self):
         pass
@@ -85,6 +86,7 @@ class GetLatLng:
                 word_set = ['None', '성동구청', '강동구청', '이동동선', '성동구청', '이동경로']
                 if val not in word_set:
                     print(val)
+
 
 if __name__ == '__main__':
     g = GetLatLng()
