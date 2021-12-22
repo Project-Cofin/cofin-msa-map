@@ -86,7 +86,9 @@ DATABASES = {
         'NAME': 'organdb',
         'USER': 'root',
         'PASSWORD':'root',
-        'HOST':'127.0.0.1',
+        # 'HOST':'127.0.0.1',
+        'HOST':'host.docker.internal',
+        # 'HOST':'db',
         'PORT': '3306'
     }
 }

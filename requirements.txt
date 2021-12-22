@@ -8,3 +8,4 @@ selenium
 beautifulsoup4
 django-rest-knox
 django-cors-headers
+pandas
