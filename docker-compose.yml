@@ -18,16 +18,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: sangho/cofin-map:v1
+    image: lmn165/cofin-map:2.0
     container_name: backend-map
-    command: sh -c "dockerize -wait tcp://host.docker.internal:3306 -timeout 20s && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "dockerize -wait tcp://host.docker.internal:3306 -timeout 20s && python manage.py runserver 0.0.0.0:8001"
     restart: always
     ports:
-      - "8000:8000"
+      - "8001:8001"
     volumes:
       - .:/backend-map/
     expose:
-      - "8000"
+      - "8001"
     depends_on:
       - db
 networks:

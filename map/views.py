@@ -48,3 +48,11 @@ def cases_points(request):
                                              [current_geo["latitude"], current_geo["longitude"], current_geo["latitude"]])
     serializer = MapSerializer(cases_points, many=True)
     return JsonResponse(data=serializer.data, safe=False)
+
+
+@api_view(['GET'])
+@parser_classes([JSONParser])
+def med_point(request, med_point):
+    med_point_info = Map.objects.filter(med_point=med_point)[0]
+    serializer = MapSerializer(med_point_info)
+    return JsonResponse(data=serializer.data, safe=False)
