@@ -1,6 +1,6 @@
 FROM python:3.8
 
-WORKDIR /backend-map
+WORKDIR /cofin-msa-map
 
 COPY . .
 COPY requirements.txt requirements.txt
